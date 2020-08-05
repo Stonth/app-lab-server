@@ -1,0 +1,11 @@
+{
+  "name": "app-lab-server",
+  "version": "1.0.0",
+  "description": "Server content to a web app created with Code.org's App Lab.",
+  "main": "src/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "David Fine",
+  "license": "ISC"
+}
