@@ -22,7 +22,7 @@ module.exports = {
     },
 
     getPixelsNeeded: function (str) {
-        return Math.ceil((str.length * this.BYTES_PER_CHAR) / 12) * 4;
+        return Math.ceil((str.length * this.BYTES_PER_CHAR + 4) / 12) * 4;
     },
 
     writeHeaders: function (start, buffArray, strObject) {
@@ -92,6 +92,11 @@ module.exports = {
 
         let byteIndex = 0;
 
+        // Write the length.
+        buffArray.set(this.uint32ToUint8Array(strObject.length), arrayIndex);
+        arrayIndex += 4;
+        byteIndex = byteIndex + 4;
+
         // Write character by characer.
         for (let i = 0; i < strObject.length; i++) {
             buffArray.set(this.uint32ToUint8Array(strObject.charCodeAt(i)), arrayIndex);
@@ -108,7 +113,7 @@ module.exports = {
     },
 
     uint32ToUint8Array: function (val) {
-        return [val >> 0, val >> 8, val >> 16, val >> 24].map(x => x);
+        return [val >> 0, val >> 8, val >> 16, val >> 24].map(x => x & 0xFF);
     },
 
     getBufferSize: function (str) {
