@@ -1,3 +1,5 @@
+const jimp = require('jimp');
+
 module.exports = {
 
     /*
@@ -11,14 +13,24 @@ module.exports = {
     SIGNATURE: 'BM',
 
     convert: function (obj) {
-        const strObject = JSON.stringify(obj);
-        
-        const buffArray = new Uint8Array(this.getBufferSize(strObject));
-        let ind = this.writeHeaders(0, buffArray, strObject);
+        return new Promise((resolve, reject) => {
+            const strObject = JSON.stringify(obj);
 
-        this.writePixels(ind, buffArray, strObject);
+            const buffArray = new Uint8Array(this.getBufferSize(strObject));
+            let ind = this.writeHeaders(0, buffArray, strObject);
 
-        return Buffer.from(buffArray.buffer);
+            this.writePixels(ind, buffArray, strObject);
+
+            jimp.read(Buffer.from(buffArray.buffer)).then((image) => {
+                image.getBufferAsync(jimp.MIME_PNG).then((buff) => {
+                    resolve(buff);
+                }).catch((err) => {
+                    reject(err);
+                });
+            }).catch((err) => {
+                reject(err);
+            });
+        });
     },
 
     getPixelsNeeded: function (str) {

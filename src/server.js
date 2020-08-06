@@ -1,22 +1,10 @@
 const express = require('express');
-const jimp = require('jimp');
-const jsonToBmp = require('./jsonToBmp');
 const app = express();
+const routeHelloWorld = require('./routes/hello-world');
+const jsonToPng = require('./util/jsonToPng');
 
-app.get('/test.png', (req, res) => {
-    res.type('png');
-    const bmp = jsonToBmp.convert({ message: 'Hello World!' });
-    jimp.read(bmp).then((image) => {
-        image.getBufferAsync(jimp.MIME_PNG).then((buff) => {
-            res.send(buff);
-        }).catch((err) => {
-            res.status(400).send(err.message);
-        });
-    }).catch((err) => {
-        res.status(400).send(err.message);
-    });
-});
+app.use('/hello-world', routeHelloWorld);
 
-app.listen(8080, () => {
+app.listen(420, () => {
     console.log('Listening...');
 });
