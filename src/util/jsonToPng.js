@@ -33,8 +33,12 @@ module.exports = {
         });
     },
 
-    getPixelsNeeded: function (str) {
-        return Math.ceil((str.length * this.BYTES_PER_CHAR + 4) / 12) * 4;
+    getHeightNeeded: function (str) {
+        return Math.ceil(Math.sqrt(Math.ceil((str.length * this.BYTES_PER_CHAR + 4) / 3)));
+    },
+
+    getWidthNeeded: function (str) {
+        return Math.ceil(this.getHeightNeeded(str) / 4) * 4;
     },
 
     writeHeaders: function (start, buffArray, strObject) {
@@ -61,9 +65,9 @@ module.exports = {
         ind += 4;
 
         // Width and height.
-        buffArray.set(this.uint32ToUint8Array(this.getPixelsNeeded(strObject)), ind);
+        buffArray.set(this.uint32ToUint8Array(this.getWidthNeeded(strObject)), ind);
         ind += 4;
-        buffArray.set(this.uint32ToUint8Array(1), ind);
+        buffArray.set(this.uint32ToUint8Array(-this.getHeightNeeded(strObject)), ind);
         ind += 4;
 
         // Planes.
@@ -102,25 +106,28 @@ module.exports = {
     writePixels: function (start, buffArray, strObject) {
         let arrayIndex = start;
 
-        let byteIndex = 0;
-
-        // Write the length.
-        buffArray.set(this.uint32ToUint8Array(strObject.length), arrayIndex);
-        arrayIndex += 4;
-        byteIndex = byteIndex + 4;
-
         // Write character by characer.
-        for (let i = 0; i < strObject.length; i++) {
-            buffArray.set(this.uint32ToUint8Array(strObject.charCodeAt(i)), arrayIndex);
-            arrayIndex += 4;
-            byteIndex = byteIndex + 4;
-        }
-
-        // Finish the remaining pixel + padding.
-        while (byteIndex % 12 > 0) {
-            buffArray.set([0], arrayIndex);
-            arrayIndex++;
-            byteIndex++;
+        const w = this.getWidthNeeded(strObject);
+        const h = this.getHeightNeeded(strObject);
+        let cur = 0;
+        const bytes = [...this.uint32ToUint8Array(strObject.length)];
+        for (let y = 0; y < h; y++) {
+            for (let x = 0; x < w; x++) {
+                if (x < h) {
+                    if (bytes.length < 3) {
+                        if (cur < strObject.length) {
+                            bytes.push(...this.uint32ToUint8Array(strObject.charCodeAt(cur++)));
+                        } else {
+                            bytes.push(0, 0, 0, 0);
+                        }
+                    }
+                buffArray.set(bytes.splice(0, 3), arrayIndex);
+                arrayIndex += 3;
+                } else {
+                    buffArray.set([0, 0, 0], arrayIndex);
+                    arrayIndex += 3;
+                }
+            }
         }
     },
 
@@ -129,7 +136,7 @@ module.exports = {
     },
 
     getBufferSize: function (str) {
-        return this.HEADER_LENGTH + this.INFO_LENGTH + this.getPixelsNeeded(str) * 3;
+        return this.HEADER_LENGTH + this.INFO_LENGTH + this.getWidthNeeded(str) * this.getHeightNeeded(str) * 3;
     }
 
 };

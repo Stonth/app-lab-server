@@ -9,6 +9,7 @@
   "author": "David Fine",
   "license": "ISC",
   "dependencies": {
+    "bent": "^7.3.9",
     "express": "^4.17.1",
     "jimp": "^0.14.0"
   }
