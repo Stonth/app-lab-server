@@ -1,3 +1,9 @@
+/*
+    This is the object containing the function which converts JSON to PNG (convert). First,
+    it converts the the JSON to a string. Then, it encodes this string as a BMP image. Finally,
+    because code.org cannot load BMP images, the image is converted to a PNG.
+*/
+
 const jimp = require('jimp');
 
 module.exports = {
@@ -12,6 +18,7 @@ module.exports = {
     INFO_LENGTH: 40,
     SIGNATURE: 'BM',
 
+    // Convert a JSON object to a PNG.
     convert: function (obj) {
         return new Promise((resolve, reject) => {
             const strObject = JSON.stringify(obj);
@@ -33,14 +40,17 @@ module.exports = {
         });
     },
 
+    // Get the heigh needed to encode the JSON.
     getHeightNeeded: function (str) {
         return Math.ceil(Math.sqrt(Math.ceil((str.length * this.BYTES_PER_CHAR + 4) / 3)));
     },
 
+    // Get the width needed to encode the JSON.
     getWidthNeeded: function (str) {
         return Math.ceil(this.getHeightNeeded(str) / 4) * 4;
     },
 
+    // Write the header and info for the image. Basically, just some BMP stuff.
     writeHeaders: function (start, buffArray, strObject) {
         let ind = start;
 
@@ -103,6 +113,8 @@ module.exports = {
         return ind;
     },
 
+    // Write the actual pixels of the image. This will include the length of the string,
+    // as well as the data itself.
     writePixels: function (start, buffArray, strObject) {
         let arrayIndex = start;
 
@@ -131,12 +143,14 @@ module.exports = {
         }
     },
 
+    // Converts an unsigned 32 bit integer (there are a lot of those in this application) to
+    // a 4 element array of unsigned 8 bit integers.
     uint32ToUint8Array: function (val) {
         return [val >> 0, val >> 8, val >> 16, val >> 24].map(x => x & 0xFF);
     },
 
+    // Get the side the buffer will need to be based on the JSON string being encoded.
     getBufferSize: function (str) {
         return this.HEADER_LENGTH + this.INFO_LENGTH + this.getWidthNeeded(str) * this.getHeightNeeded(str) * 3;
     }
-
 };
