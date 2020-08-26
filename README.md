@@ -1,8 +1,9 @@
 # App Lab Server
-This project represents three examples of how a server can communicate with a client application that has been created using Code.org's app lab. Essentially, it is a method for getting around with whitelist of domains that you can make HTTP requests to.
+This project represents three examples of a server communicating with a client application that has been created using [Code.org](https://studio.code.org/home)'s App Lab. Essentially, it is a method for getting around with whitelist of domains that you can make HTTP requests to.
 
 ## YouTube Video
-Who like reading? How about you watch my video instead! This repository is simply meant to provide mroe technical details for those who are so inclined.
+Who like reading? How about you watch my video instead! This repository is simply meant to provide more technical details for those who are so inclined.
+
 TODO: This is where the video link will go.
 
 ## How Does It Work?

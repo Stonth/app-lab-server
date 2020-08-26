@@ -13,7 +13,7 @@ const jsonToPng = require('../util/json-to-png');
 const dupeChecker = new (require('../util/dupe-checker'))();
 
 const MAX_USERNAME_LENGTH = 16;
-const MAX_MESSAGE_LENGTH = 140;
+const MAX_MESSAGE_LENGTH = 80;
 const RESULTS_PER_PAGE = 5;
 const router = express.Router();
 

@@ -1,5 +1,5 @@
 /*
-    This object is used to check for duplicate requests. I think Chrome issues duplicate requests
+    This object is used to check for duplicate requests. I think App Lab issues duplicate requests
     after 3 seconds if an image has not yet been recieved.
 */
 
@@ -10,7 +10,7 @@ const DupeChecker = function () {
 DupeChecker.prototype.TIMEOUT = 10;
 
 DupeChecker.prototype.check = function (req) {
-    const key = req.path + ' ' + req.ip;
+    const key = req.path;
     if (this.duplicates[key]) {
         return false;
     } else {
