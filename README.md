@@ -2,9 +2,7 @@
 This project represents three examples of a server communicating with a client application that has been created using [Code.org](https://studio.code.org/home)'s App Lab. Essentially, it is a method for getting around with whitelist of domains that you can make HTTP requests to.
 
 ## YouTube Video
-Who like reading? How about you watch my video instead! This repository is simply meant to provide more technical details for those who are so inclined.
-
-TODO: This is where the video link will go.
+Who like reading? [How about you watch my video instead!](https://youtu.be/i-pE1P4cHIs) This repository is simply meant to provide more technical details for those who are so inclined.
 
 ## How Does It Work?
 App Lab's startWebRequest function resticts the domains you can access. XMLHttpRequest is unavailable. However, App Lab will load images from any domain you want. Now, App Lab has something similiar to HTML5's Canvas API. This means that you can load images from any domain (like, a server that you are running) and paint them onto a canvas. Luckily, App Lab has a getImageData function, which I use to get the Red, Green, and Blue values from each pixel (unsigned, 8 bit integers).
